@@ -4,7 +4,7 @@ from typing import List
 from syftbox.lib import Client, SyftPermission
 from pydantic import BaseModel
 from pydantic_core import from_json
-from .function import ring_function
+from ring_function import ring_function
 
 RING_APP_PATH = Path(os.path.abspath(__file__)).parent
 
