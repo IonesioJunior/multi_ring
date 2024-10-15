@@ -4,7 +4,7 @@ from typing import List
 from syftbox.lib import Client, SyftPermission
 from pydantic import BaseModel
 from pydantic_core import from_json
-
+from .function import ring_function
 
 RING_APP_PATH = Path(os.path.abspath(__file__)).parent
 
@@ -23,14 +23,17 @@ class RingData(BaseModel):
         with open(file, "r") as f:
             return cls(**from_json(f.read()))
 
+
 class RingRunner:
     def __init__(self):
         self.client = Client.load()
 
         self.my_email: str = self.client.email
-        
+
         # this is where all the app state goes
-        self.ring_pipeline_path: Path = Path(self.client.datasite_path) / "app_pipelines" / "ring"
+        self.ring_pipeline_path: Path = (
+            Path(self.client.datasite_path) / "app_pipelines" / "ring"
+        )
         # this is where the pending inputs go
         self.running_folder: Path = self.ring_pipeline_path / "running"
         # this is where the final result goes of a completed ring
@@ -46,14 +49,14 @@ class RingRunner:
 
         if len(input_files) == 0:
             print("No data file found. As you were, soldier.")
-        
+
     def process_input(self, file_path) -> None:
         print(f"Found input {file_path}! Let's get to work.")
 
         ring_data = RingData.load_json(file_path)
 
-        ring_data.data += self.my_secret()
-
+        # ring_data.data += self.my_secret()
+        ring_data.data = ring_function(ring_data, secret_path)
         if ring_data.current_index < ring_data.ring_length:
             ring_data.current_index += 1
             next_person = ring_data.ring[ring_data.current_index]
@@ -74,14 +77,16 @@ class RingRunner:
 
         # after this there will be files (so we can sync)
         permission = SyftPermission.mine_with_public_write(self.my_email)
-        permission.ensure(self.ring_pipeline_path)  
+        permission.ensure(self.ring_pipeline_path)
 
     def my_secret(self):
         with open(self.secret_file, "r") as secret_file:
             return int(secret_file.read().strip())
 
     def pending_inputs_files(self) -> List[Path]:
-        return [self.running_folder / file for file in self.running_folder.glob("*.json")]
+        return [
+            self.running_folder / file for file in self.running_folder.glob("*.json")
+        ]
 
     def write_json(self, file_path: Path, result: RingData) -> None:
         print(f"Writing to {file_path}.")
@@ -91,7 +96,13 @@ class RingRunner:
 
     def send_data(self, email: str, data: RingData) -> None:
         destination_datasite_path = Path(self.client.sync_folder) / email
-        dest = destination_datasite_path / "app_pipelines" / "ring" / "running" / "data.json"
+        dest = (
+            destination_datasite_path
+            / "app_pipelines"
+            / "ring"
+            / "running"
+            / "data.json"
+        )
         self.write_json(dest, data)
 
     def terminate_ring(self, data: RingData) -> None:
@@ -102,4 +113,3 @@ class RingRunner:
 if __name__ == "__main__":
     runner = RingRunner()
     runner.run()
-    
