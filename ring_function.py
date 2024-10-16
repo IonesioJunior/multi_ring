@@ -52,7 +52,8 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     print("Loading the model file ...")
     # Load serialized model if present
     if hasattr(ring_data, "model"):
-        model.load_state_dict(ring_data.model)
+        state_dict = torch.load(ring_data.model)
+        model.load_state_dict(state_dict)
 
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=ring_data.learning_rate)
