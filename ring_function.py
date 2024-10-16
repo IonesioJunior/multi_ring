@@ -10,7 +10,7 @@ from types import SimpleNamespace
 from syftbox.lib import Client, SyftPermission
 from torch.utils.data import DataLoader, TensorDataset
 import shutil
-
+import os
 
 class SimpleNN(nn.Module):
     def __init__(self):
@@ -100,5 +100,6 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
 
     print(f"\n\n Saving it in {str(new_model_path)}\n\n")
     # Serialize the model
+    os.makedirs(os.path.dirname(str(new_model_path)), exist_ok=True)
     torch.save(model.state_dict(), str(new_model_path))
     return 0
