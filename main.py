@@ -2,26 +2,20 @@ import os
 from pathlib import Path
 from typing import List
 from syftbox.lib import Client, SyftPermission
-from pydantic import BaseModel
-from pydantic_core import from_json
 from ring_function import ring_function
+from types import SimpleNamespace
+import json
 
 RING_APP_PATH = Path(os.path.abspath(__file__)).parent
 
 
-class RingData(BaseModel):
-    ring: list[str]
-    data: int
-    current_index: int
+def ring_length(ring_data: SimpleNamespace) -> int:
+    return len(ring_data.ring)
 
-    @property
-    def ring_length(self) -> int:
-        return len(self.ring)
 
-    @classmethod
-    def load_json(cls, file):
-        with open(file, "r") as f:
-            return cls(**from_json(f.read()))
+def load_json(file: str) -> SimpleNamespace:
+    with open(file, "r") as f:
+        return SimpleNamespace(**json.load(f))
 
 
 class RingRunner:
@@ -53,11 +47,11 @@ class RingRunner:
     def process_input(self, file_path) -> None:
         print(f"Found input {file_path}! Let's get to work.")
 
-        ring_data = RingData.load_json(file_path)
+        ring_data = load_json(file_path)
 
         # ring_data.data += self.my_secret()
         ring_data.data = ring_function(ring_data, self.secret_file)
-        if ring_data.current_index < ring_data.ring_length - 1:
+        if ring_data.current_index < ring_length(ring_data) - 1:
             print("Going here with index = ", ring_data.current_index)
             ring_data.current_index += 1
             next_person = ring_data.ring[ring_data.current_index]
