@@ -29,7 +29,7 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     client = Client.load()
     mnist_path = ""
     with open(secret_path, 'r') as secret_file:
-        mnist_path = secret_file.read()
+        mnist_path = secret_file.read().strip()
 
 
     if ring_data.current_index >= len(ring_data.ring) - 1:
