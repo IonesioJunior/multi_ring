@@ -36,7 +36,17 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
         done_pipeline_path: Path = (
             Path(client.datasite_path) / "app_pipelines" / "ring" / "done"
         )
-        shutil.move(ring_data.model, str(done_pipeline_path))
+        destination_datasite_path = Path(client.sync_folder) / client.email 
+        new_model_path = (
+            destination_datasite_path
+            / "app_pipelines"
+            / "ring"
+            / "running"
+            / ring_data.model
+        )
+
+
+        shutil.move(new_model_path, str(done_pipeline_path))
         return 0
 
     # Load MNIST dataset
