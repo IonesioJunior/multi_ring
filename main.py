@@ -56,7 +56,7 @@ class RingRunner:
         ring_data = RingData.load_json(file_path)
 
         # ring_data.data += self.my_secret()
-        ring_data.data = ring_function(ring_data, secret_path)
+        ring_data.data = ring_function(ring_data, self.secret_file)
         if ring_data.current_index < ring_data.ring_length:
             ring_data.current_index += 1
             next_person = ring_data.ring[ring_data.current_index]
