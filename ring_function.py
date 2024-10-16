@@ -12,6 +12,7 @@ from torch.utils.data import DataLoader, TensorDataset
 import shutil
 import os
 
+
 class SimpleNN(nn.Module):
     def __init__(self):
         super(SimpleNN, self).__init__()
@@ -28,9 +29,8 @@ class SimpleNN(nn.Module):
 def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     client = Client.load()
     mnist_path = ""
-    with open(secret_path, 'r') as secret_file:
+    with open(secret_path, "r") as secret_file:
         mnist_path = secret_file.read().strip()
-
 
     if ring_data.current_index >= len(ring_data.ring) - 1:
         done_pipeline_path: Path = (
@@ -51,11 +51,6 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     # Create a DataLoader for the dataset
     train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
 
-    # train_dataset = datasets.MNIST(
-    #     mnist_path, train=True, download=True, transform=transform
-    # )
-    # train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
-
     model = SimpleNN()  # Initialize model
 
     # Load serialized model if present
@@ -75,6 +70,17 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
             loss = criterion(outputs, labels)
             loss.backward()
             optimizer.step()
+
+            # Accumulate loss
+            running_loss += loss.item()
+
+            # Print loss every 200 epochs
+            if i % 200 == 0:
+                print(
+                    f"Epoch [{epoch+1}/{ring_data.iterations}], Step [{i}/{len(train_loader)}], Loss: {running_loss/200:.4f}"
+                )
+                running_loss = 0.0
+
     print("\n\n Done...\n\n ")
 
     next_index = ring_data.current_index + 1
