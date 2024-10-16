@@ -68,8 +68,10 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
             loss.backward()
             optimizer.step()
 
-    ring_data.current_index += 1
-    next_person = ring_data.ring[ring_data.current_index]
+    print("\n\n Done...\n\n ")
+
+    next_index = ring_data.current_index + 1
+    next_person = ring_data.ring[next_index]
 
     destination_datasite_path = Path(client.sync_folder) / next_person
     new_model_path = (
