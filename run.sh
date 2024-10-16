@@ -4,5 +4,5 @@ uv venv --allow-existing
 # if that fails it will locate syftbox using the global uv tool path
 # which ensures you get editable mode and stand-alone running in one line
 uv run python -c 'import syftbox' 2>/dev/null || export PYTHONPATH=$(uv tool run syftbox path):$PYTHONPATH
-uv pip install torch
+uv pip install torch torchvision
 uv run python main.py
