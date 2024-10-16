@@ -67,14 +67,14 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     optimizer = optim.SGD(model.parameters(), lr=float(ring_data.learning_rate))
 
     print("\n\n Training...\n\n ")
-        # Training loop
-        for epoch in range(int(ring_data.iterations)):
-            for images, labels in train_loader:
-                optimizer.zero_grad()
-                outputs = model(images)
-                loss = criterion(outputs, labels)
-                loss.backward()
-                optimizer.step()
+    # Training loop
+    for epoch in range(int(ring_data.iterations)):
+        for images, labels in train_loader:
+            optimizer.zero_grad()
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
     print("\n\n Done...\n\n ")
 
     next_index = ring_data.current_index + 1
