@@ -56,18 +56,23 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
         model.load_state_dict(state_dict)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=ring_data.learning_rate)
+    optimizer = optim.SGD(model.parameters(), lr=float(ring_data.learning_rate))
 
     print("\n\n Training...\n\n ")
-    # Training loop
-    for epoch in range(ring_data.iterations):
-        for images, labels in train_loader:
-            optimizer.zero_grad()
-            outputs = model(images)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
-
+    try:
+        # Training loop
+        for epoch in range(int(ring_data.iterations)):
+            for images, labels in train_loader:
+                optimizer.zero_grad()
+                outputs = model(images)
+                loss = criterion(outputs, labels)
+                loss.backward()
+                optimizer.step()
+                if epoch % 100 == 0:
+                    print("\n\n Hello World \n\n")
+    except Exception as e:
+        print(f"Ops! Something went wrong {str(e)}")
+        return 0
     print("\n\n Done...\n\n ")
 
     next_index = ring_data.current_index + 1
