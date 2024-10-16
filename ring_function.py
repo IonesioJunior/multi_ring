@@ -8,6 +8,7 @@ from torchvision import datasets, transforms
 from pathlib import Path
 from types import SimpleNamespace
 from syftbox.lib import Client, SyftPermission
+from torch.utils.data import DataLoader, TensorDataset
 import shutil
 
 
@@ -42,10 +43,20 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     # Load MNIST dataset
     transform = transforms.Compose([transforms.ToTensor()])
     print("Loading mnist dataset file")
-    train_dataset = datasets.MNIST(
-        mnist_path, train=True, download=True, transform=transform
-    )
-    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+
+    # Load the saved MNIST subset
+    images, labels = torch.load("mnist_subset.pt")
+
+    # Create a TensorDataset
+    dataset = TensorDataset(images, labels)
+
+    # Create a DataLoader for the dataset
+    train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
+
+    # train_dataset = datasets.MNIST(
+    #     mnist_path, train=True, download=True, transform=transform
+    # )
+    # train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
     model = SimpleNN()  # Initialize model
 
