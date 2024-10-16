@@ -58,7 +58,7 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=ring_data.learning_rate)
 
-    print("Training...")
+    print("\n\n Training...\n\n ")
     # Training loop
     for epoch in range(ring_data.iterations):
         for images, labels in train_loader:
@@ -80,7 +80,7 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
         / ring_data.model
     )
 
-    print(f"Saving it in {str(new_model_path)}")
+    print(f"\n\n Saving it in {str(new_model_path)}\n\n")
     # Serialize the model
     torch.save(model.state_dict(), str(new_model_path))
     return 0
