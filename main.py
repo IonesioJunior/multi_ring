@@ -83,13 +83,13 @@ class RingRunner:
             self.running_folder / file for file in self.running_folder.glob("*.json")
         ]
 
-    def write_json(self, file_path: Path, result: RingData) -> None:
+    def write_json(self, file_path: Path, result: SimpleNamespace) -> None:
         print(f"Writing to {file_path}.")
         file_path.parent.mkdir(parents=True, exist_ok=True)
         with open(file_path, "w") as f:
             f.write(result.model_dump_json())
 
-    def send_data(self, email: str, data: RingData) -> None:
+    def send_data(self, email: str, data: SimpleNamespace) -> None:
         destination_datasite_path = Path(self.client.sync_folder) / email
         dest = (
             destination_datasite_path
@@ -100,7 +100,7 @@ class RingRunner:
         )
         self.write_json(dest, data)
 
-    def terminate_ring(self, data: RingData) -> None:
+    def terminate_ring(self, data: SimpleNamespace) -> None:
         print(f"Terminating ring, writing back to {self.done_folder}")
         self.write_json(self.done_folder / "data.json", data)
 
