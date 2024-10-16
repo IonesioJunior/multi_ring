@@ -1,1 +1,1 @@
-{"ring": ["a@openmined.org", "b@openmined.org", "a@openmined.org"], "data": 0, "current_index": 0}
+{"ring": ["a@openmined.org", "b@openmined.org", "a@openmined.org"], "data": 0, "current_index": 0, "learning_rate": 0.1, "iterations": 1000, "model":"mnist_model.pth"}
