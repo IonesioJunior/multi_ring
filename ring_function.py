@@ -88,7 +88,7 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     correct = 0
     total = 0
     with torch.no_grad():
-        for images, labels in test_loader:
+        for images, labels in train_loader:
             outputs = model(images)
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
