@@ -65,7 +65,7 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     # Training loop
     for epoch in range(int(ring_data.iterations)):
         running_loss = 0
-        for images, labels in train_loader:
+        for i, (images, labels) in enumerate(train_loader, 1):
             optimizer.zero_grad()
             outputs = model(images)
             loss = criterion(outputs, labels)
