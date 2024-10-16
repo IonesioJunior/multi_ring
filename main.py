@@ -87,7 +87,7 @@ class RingRunner:
         print(f"Writing to {file_path}.")
         file_path.parent.mkdir(parents=True, exist_ok=True)
         with open(file_path, "w") as f:
-            f.write(result.model_dump_json())
+            f.write(json.dumps(vars(result)))
 
     def send_data(self, email: str, data: SimpleNamespace) -> None:
         destination_datasite_path = Path(self.client.sync_folder) / email
