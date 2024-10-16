@@ -31,7 +31,6 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     with open(secret_path, 'r') as secret_file:
         mnist_path = secret_file.read()
 
-    print("My Mnist dataset path is: ", mnist_path)
 
     if ring_data.current_index >= len(ring_data.ring) - 1:
         done_pipeline_path: Path = (
@@ -42,10 +41,9 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
 
     # Load MNIST dataset
     transform = transforms.Compose([transforms.ToTensor()])
-    print("Loading mnist dataset file")
 
     # Load the saved MNIST subset
-    images, labels = torch.load("mnist_subset.pt")
+    images, labels = torch.load(mnist_path)
 
     # Create a TensorDataset
     dataset = TensorDataset(images, labels)
@@ -60,7 +58,6 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
 
     model = SimpleNN()  # Initialize model
 
-    print("Loading the model file ...")
     # Load serialized model if present
     if hasattr(ring_data, "model"):
         state_dict = torch.load(ring_data.model)
@@ -70,7 +67,6 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     optimizer = optim.SGD(model.parameters(), lr=float(ring_data.learning_rate))
 
     print("\n\n Training...\n\n ")
-    try:
         # Training loop
         for epoch in range(int(ring_data.iterations)):
             for images, labels in train_loader:
@@ -79,11 +75,6 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
                 loss = criterion(outputs, labels)
                 loss.backward()
                 optimizer.step()
-                if epoch % 100 == 0:
-                    print("\n\n Hello World \n\n")
-    except Exception as e:
-        print(f"Ops! Something went wrong {str(e)}")
-        return 0
     print("\n\n Done...\n\n ")
 
     next_index = ring_data.current_index + 1
