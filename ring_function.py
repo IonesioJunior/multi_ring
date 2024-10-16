@@ -84,6 +84,19 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
 
     print("\n\n Done...\n\n ")
 
+    # Evaluation
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for images, labels in test_loader:
+            outputs = model(images)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
+
+    accuracy = 100 * correct / total
+    print(f'Accuracy of the model on the test dataset: {accuracy:.2f}%')
+
     next_index = ring_data.current_index + 1
     next_person = ring_data.ring[next_index]
 
