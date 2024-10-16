@@ -57,7 +57,8 @@ class RingRunner:
 
         # ring_data.data += self.my_secret()
         ring_data.data = ring_function(ring_data, self.secret_file)
-        if ring_data.current_index < ring_data.ring_length:
+        if ring_data.current_index < ring_data.ring_length - 1:
+            print("Going here with index = ", ring_data.current_index)
             ring_data.current_index += 1
             next_person = ring_data.ring[ring_data.current_index]
             self.send_data(next_person, ring_data)
