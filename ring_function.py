@@ -64,6 +64,7 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     print("\n\n Training...\n\n ")
     # Training loop
     for epoch in range(int(ring_data.iterations)):
+        running_loss = 0
         for images, labels in train_loader:
             optimizer.zero_grad()
             outputs = model(images)
