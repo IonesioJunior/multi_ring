@@ -59,15 +59,15 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=float(ring_data.learning_rate))
 
-    dataset_path_files = [f for f in os.listdir(directory) if f.endswith('.pt')]
+    dataset_path_files = [f for f in os.listdir(dataset_path) if f.endswith('.pt')]
     
-    for dataset_path in dataset_path_files:
+    for dataset_file in dataset_path_files:
 
         # Load MNIST dataset
         transform = transforms.Compose([transforms.ToTensor()])
 
         # Load the saved MNIST subset
-        images, labels = torch.load()
+        images, labels = torch.load(dataset_file)
 
         # Create a TensorDataset
         dataset = TensorDataset(images, labels)
