@@ -2,7 +2,7 @@ import json
 
 import torch
 import torch.nn as nn
-
+import os
 
 class SimpleNN(nn.Module):
     def __init__(self):
@@ -65,9 +65,14 @@ def get_inputs():
                 )
             )
 
+    default_dataset_path = os.getcwd()
+    
+    default_dataset_path += "/datasets"
     secret_number = input(
-        f"{BLUE}ADD the path were your MNIST dataset subset lives: {NC}"
+        f"{BLUE}ADD the path were your dataset lives (default: {default_dataset_path}): {NC}"
     )
+    if secret_number == ""
+        secret_number = default_dataset_path
 
     # Write the secret number to a file
     with open("secret.txt", "w") as file:
