@@ -28,9 +28,9 @@ class SimpleNN(nn.Module):
 
 def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     client = Client.load()
-    mnist_path = ""
+    dataset_path = ""
     with open(secret_path, "r") as secret_file:
-        mnist_path = secret_file.read().strip()
+        dataset_path = secret_file.read().strip()
 
     if ring_data.current_index >= len(ring_data.ring) - 1:
         done_pipeline_path: Path = (
@@ -48,19 +48,7 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
 
         shutil.move(new_model_path, str(done_pipeline_path))
         return 0
-
-    # Load MNIST dataset
-    transform = transforms.Compose([transforms.ToTensor()])
-
-    # Load the saved MNIST subset
-    images, labels = torch.load(mnist_path)
-
-    # Create a TensorDataset
-    dataset = TensorDataset(images, labels)
-
-    # Create a DataLoader for the dataset
-    train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
-
+    
     model = SimpleNN()  # Initialize model
 
     # Load serialized model if present
@@ -71,26 +59,42 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.SGD(model.parameters(), lr=float(ring_data.learning_rate))
 
-    print("\n\n Training...\n\n ")
-    # Training loop
-    for epoch in range(int(ring_data.iterations)):
-        running_loss = 0
-        for i, (images, labels) in enumerate(train_loader, 1):
-            optimizer.zero_grad()
-            outputs = model(images)
-            loss = criterion(outputs, labels)
-            loss.backward()
-            optimizer.step()
+    dataset_path_files = [f for f in os.listdir(directory) if f.endswith('.pt')]
+    
+    for dataset_path in dataset_path_files:
 
-            # Accumulate loss
-            running_loss += loss.item()
+        # Load MNIST dataset
+        transform = transforms.Compose([transforms.ToTensor()])
 
-            # Print loss every 200 epochs
-            if i % 200 == 0:
-                print(
-                    f"Epoch [{epoch+1}/{ring_data.iterations}], Step [{i}/{len(train_loader)}], Loss: {running_loss/200:.4f}"
-                )
-                running_loss = 0.0
+        # Load the saved MNIST subset
+        images, labels = torch.load()
+
+        # Create a TensorDataset
+        dataset = TensorDataset(images, labels)
+
+        # Create a DataLoader for the dataset
+        train_loader = DataLoader(dataset, batch_size=32, shuffle=True)
+
+        print("\n\n Training...\n\n ")
+        # Training loop
+        for epoch in range(int(ring_data.iterations)):
+            running_loss = 0
+            for i, (images, labels) in enumerate(train_loader, 1):
+                optimizer.zero_grad()
+                outputs = model(images)
+                loss = criterion(outputs, labels)
+                loss.backward()
+                optimizer.step()
+
+                # Accumulate loss
+                running_loss += loss.item()
+
+                # Print loss every 200 epochs
+                if i % 200 == 0:
+                    print(
+                        f"Epoch [{epoch+1}/{ring_data.iterations}], Step [{i}/{len(train_loader)}], Loss: {running_loss/200:.4f}"
+                    )
+                    running_loss = 0.0
 
     print("\n\n Done...\n\n ")
 
