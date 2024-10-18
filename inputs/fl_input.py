@@ -71,7 +71,7 @@ def get_inputs():
     secret_number = input(
         f"{BLUE}ADD the path were your dataset lives (default: {default_dataset_path}): {NC}"
     )
-    if secret_number == ""
+    if secret_number == "":
         secret_number = default_dataset_path
 
     # Write the secret number to a file
