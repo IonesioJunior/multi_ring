@@ -34,13 +34,13 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
 
     if ring_data.current_index >= len(ring_data.ring) - 1:
         done_pipeline_path: Path = (
-            Path(client.datasite_path) / "app_pipelines" / "ring" / "done"
+            Path(client.datasite_path) / "app_pipelines" / "multi_ring" / "done"
         )
         destination_datasite_path = Path(client.sync_folder) / client.email 
         new_model_path = (
             destination_datasite_path
             / "app_pipelines"
-            / "ring"
+            / "multi_ring"
             / "running"
             / ring_data.model
         )
@@ -114,7 +114,7 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
     new_model_path = (
         destination_datasite_path
         / "app_pipelines"
-        / "ring"
+        / "multi_ring"
         / "running"
         / ring_data.model
     )

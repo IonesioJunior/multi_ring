@@ -26,7 +26,7 @@ class RingRunner:
 
         # this is where all the app state goes
         self.ring_pipeline_path: Path = (
-            Path(self.client.datasite_path) / "app_pipelines" / "ring"
+            Path(self.client.datasite_path) / "app_pipelines" / "multi_ring"
         )
         # this is where the pending inputs go
         self.running_folder: Path = self.ring_pipeline_path / "running"
@@ -93,7 +93,7 @@ class RingRunner:
         dest = (
             destination_datasite_path
             / "app_pipelines"
-            / "ring"
+            / "multi_ring"
             / "running"
             / "data.json"
         )
