@@ -67,7 +67,7 @@ def ring_function(ring_data: SimpleNamespace, secret_path: Path):
         transform = transforms.Compose([transforms.ToTensor()])
 
         # Load the saved MNIST subset
-        images, labels = torch.load(dataset_file)
+        images, labels = torch.load(dataset_path + '/' + dataset_file)
 
         # Create a TensorDataset
         dataset = TensorDataset(images, labels)
